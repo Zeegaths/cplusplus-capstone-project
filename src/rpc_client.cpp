@@ -46,7 +46,7 @@ BitcoinRPC &BitcoinRPC::operator=(BitcoinRPC &&other) noexcept
         cfg_ = std::move(other.cfg_);
         curl_ = other.curl_;
         other.curl_ = nullptr;
-   
+    return *this;    
 }
 
 size_t BitcoinRPC::write_cb(char *ptr, size_t size, size_t nmemb, void *userdata)
