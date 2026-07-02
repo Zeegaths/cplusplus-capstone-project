@@ -75,14 +75,12 @@ int main() {
         client.call("generatetoaddress", nlohmann::json::array({ 1, miner_address }));
 
         // 8. fetch transaction details
-        const auto tx_details = client.wallet_call("Trader", "gettransaction", nlohmann::json::array({ txid }));
-        const double fee = tx_details["fee"].get<double>();
-        const std::string blockhash = tx_details["blockhash"].get<std::string>();
+        const double fee = client.wallet_call("Miner", "gettransaction", nlohmann::json::array({ txid }))["fee"].get<double>();
 
+        // get decoded transaction (verbose=true returns the full decoded object)
+        const auto decoded_tx = client.call("getrawtransaction", nlohmann::json::array({ txid, true }));
+        const std::string blockhash = decoded_tx["blockhash"].get<std::string>();
         const long long block_height = client.call("getblockheader", nlohmann::json::array({ blockhash }))["height"].get<long long>();
-
-        // decode transaction
-        const auto decoded_tx = client.call("decoderawtransaction", nlohmann::json::array({ tx_details["hex"].get<std::string>() }));
 
         // resolve input using tested helper
         const auto& vin_entry = decoded_tx["vin"][0];
