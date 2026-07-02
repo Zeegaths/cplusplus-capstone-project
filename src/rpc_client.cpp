@@ -38,18 +38,15 @@ BitcoinRPC::BitcoinRPC(BitcoinRPC &&other) noexcept
 BitcoinRPC &BitcoinRPC::operator=(BitcoinRPC &&other) noexcept
 {
     // TODO: free any existing handle, then steal other's handle/config.
-    if (this == &other)
-    {
-
-        if (curl_)
+    if (this == &other) return *this;
+    if (curl_)
         {
             curl_easy_cleanup(static_cast<CURL *>(curl_));
         }
         cfg_ = std::move(other.cfg_);
         curl_ = other.curl_;
         other.curl_ = nullptr;
-    }
-    return *this;
+   
 }
 
 size_t BitcoinRPC::write_cb(char *ptr, size_t size, size_t nmemb, void *userdata)

@@ -51,6 +51,7 @@ int main() {
         ensure_wallet_exists(client, "Trader");
 
         // 2. generate miner address and mine 101 blocks
+        //  Coinbase maturity requires 100 block confirmations before the bitcoin becomes spendable- thus prevents consensus fork attacks. The 101st block is mined to ensure the miner's reward is spendable.
         std::string miner_address = client.call("getnewaddress", nlohmann::json::array({ "Mining Reward" })).get<std::string>();
         client.call("generatetoaddress", nlohmann::json::array({ 101, miner_address }));
 
